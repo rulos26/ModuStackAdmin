@@ -1,0 +1,14 @@
+{
+    "name": "DevTools",
+    "alias": "devtools",
+    "description": "Herramientas de desarrollo y mantenimiento para módulos",
+    "keywords": ["devtools", "maintenance", "tools"],
+    "priority": 99,
+    "providers": [
+        "Modules\\DevTools\\Providers\\DevToolsServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
+

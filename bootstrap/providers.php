@@ -2,6 +2,5 @@
 
 return [
     App\Providers\AppServiceProvider::class,
-    Modules\Core\Providers\CoreServiceProvider::class,
-    Modules\Users\Providers\UsersServiceProvider::class,
+    // Los módulos se registran automáticamente en AppServiceProvider::boot()
 ];

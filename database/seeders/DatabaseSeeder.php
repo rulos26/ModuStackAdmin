@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Ejecutar seeders de módulos
+        $this->call(\Modules\Users\Database\Seeders\UsersTableSeeder::class);
+
         // User::factory(10)->create();
 
         User::factory()->create([
