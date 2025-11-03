@@ -13,6 +13,16 @@ class AuthSeeder extends Seeder
      */
     public function run(): void
     {
+        // Crear usuario root universal
+        User::updateOrCreate(
+            ['email' => 'root@system.local'],
+            [
+                'name' => 'root',
+                'password' => Hash::make('root1234'),
+                'email_verified_at' => now(),
+            ]
+        );
+
         // Crear usuario administrador de prueba
         User::updateOrCreate(
             ['email' => 'admin@example.com'],
@@ -34,6 +44,7 @@ class AuthSeeder extends Seeder
         );
 
         $this->command->info('✅ Usuarios de autenticación creados exitosamente');
+        $this->command->info('   - root@system.local / root1234');
         $this->command->info('   - admin@example.com / password');
         $this->command->info('   - test@example.com / password');
     }
