@@ -16,9 +16,6 @@
     <!-- Vue Router desde CDN -->
     <script src="https://unpkg.com/vue-router@4/dist/vue-router.global.js"></script>
     
-    <!-- Pinia desde CDN -->
-    <script src="https://unpkg.com/pinia@2/dist/pinia.iife.js"></script>
-    
     <!-- Axios desde CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
@@ -39,69 +36,80 @@
     
     @verbatim
     <script>
-        const { createApp, ref, reactive, computed, onMounted } = Vue;
+        const { createApp, ref, reactive, computed, onMounted, provide, inject } = Vue;
         const { createRouter, createWebHistory } = VueRouter;
-        const { createPinia, defineStore } = Pinia;
 
         // Configurar Axios
         axios.defaults.withCredentials = true;
         axios.defaults.baseURL = '/api';
 
-        // Store de Autenticación
-        const useAuthStore = defineStore('auth', {
-            state: () => ({
+        // Store de Autenticación Manual (sin Pinia)
+        function createAuthStore() {
+            const state = reactive({
                 user: null,
                 token: localStorage.getItem('token') || null,
-            }),
+            });
 
-            getters: {
-                isAuthenticated: (state) => !!state.token,
-            },
+            return {
+                get state() {
+                    return state;
+                },
+                
+                get user() {
+                    return state.user;
+                },
+                
+                get token() {
+                    return state.token;
+                },
+                
+                get isAuthenticated() {
+                    return !!state.token;
+                },
 
-            actions: {
                 async login(email, password) {
                     try {
                         const { data } = await axios.post('/auth/login', { email, password });
-                        this.token = data.token;
-                        this.user = data.user;
+                        state.token = data.token;
+                        state.user = data.user;
                         localStorage.setItem('token', data.token);
                         axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
                         return { success: true };
                     } catch (error) {
-                return { 
-                    success: false, 
-                    message: (error.response && error.response.data && error.response.data.message) || 'Error al iniciar sesión' 
-                };
+                        return { 
+                            success: false, 
+                            message: (error.response && error.response.data && error.response.data.message) || 'Error al iniciar sesión' 
+                        };
                     }
                 },
 
                 async register(payload) {
                     try {
                         const { data } = await axios.post('/auth/register', payload);
-                        this.token = data.token;
-                        this.user = data.user;
+                        state.token = data.token;
+                        state.user = data.user;
                         localStorage.setItem('token', data.token);
                         axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
                         return { success: true };
                     } catch (error) {
-                return { 
-                    success: false, 
-                    message: (error.response && error.response.data && error.response.data.message) || 'Error al registrar usuario',
-                    errors: (error.response && error.response.data && error.response.data.errors) || {}
-                };
+                        return { 
+                            success: false, 
+                            message: (error.response && error.response.data && error.response.data.message) || 'Error al registrar usuario',
+                            errors: (error.response && error.response.data && error.response.data.errors) || {}
+                        };
                     }
                 },
 
                 async logout() {
                     try {
-                        if (this.token) {
+                        if (state.token) {
                             await axios.post('/auth/logout');
                         }
                     } catch (error) {
                         console.error('Error al cerrar sesión:', error);
                     } finally {
-                        this.token = null;
-                        this.user = null;
+                        state.token = null;
+                        state.user = null;
                         localStorage.removeItem('token');
                         delete axios.defaults.headers.common['Authorization'];
                     }
@@ -110,7 +118,7 @@
                 async fetchProfile() {
                     try {
                         const { data } = await axios.get('/auth/profile');
-                        this.user = data.user;
+                        state.user = data.user;
                         return { success: true };
                     } catch (error) {
                         this.logout();
@@ -119,13 +127,21 @@
                 },
 
                 initAuth() {
-                    if (this.token) {
-                        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+                    if (state.token) {
+                        axios.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
                         this.fetchProfile();
                     }
                 },
-            },
-        });
+            };
+        }
+
+        // Crear instancia única del store
+        const authStore = createAuthStore();
+        
+        // Función helper para usar el store en componentes
+        function useAuthStore() {
+            return authStore;
+        }
 
         // Componente Navbar
         const Navbar = {
@@ -716,11 +732,12 @@
             }
         });
 
-        // Inicializar App
-        const pinia = createPinia();
+        // Inicializar App (sin Pinia, usando store manual)
         const app = createApp(AuthLayout);
         
-        app.use(pinia);
+        // Proporcionar el store a todos los componentes
+        app.provide('authStore', authStore);
+        
         app.use(router);
         app.mount('#app');
     </script>
