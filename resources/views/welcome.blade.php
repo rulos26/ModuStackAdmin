@@ -67,10 +67,10 @@
                         axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
                         return { success: true };
                     } catch (error) {
-                        return { 
-                            success: false, 
-                            message: error.response?.data?.message || 'Error al iniciar sesión' 
-                        };
+                return { 
+                    success: false, 
+                    message: (error.response && error.response.data && error.response.data.message) || 'Error al iniciar sesión' 
+                };
                     }
                 },
 
@@ -83,11 +83,11 @@
                         axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
                         return { success: true };
                     } catch (error) {
-                        return { 
-                            success: false, 
-                            message: error.response?.data?.message || 'Error al registrar usuario',
-                            errors: error.response?.data?.errors || {}
-                        };
+                return { 
+                    success: false, 
+                    message: (error.response && error.response.data && error.response.data.message) || 'Error al registrar usuario',
+                    errors: (error.response && error.response.data && error.response.data.errors) || {}
+                };
                     }
                 },
 
@@ -160,7 +160,7 @@
                                 
                                 <div v-if="auth.isAuthenticated" class="flex items-center space-x-4">
                                     <span class="text-sm text-gray-300">
-                                        {{ auth.user?.name }}
+                                        {{ auth.user && auth.user.name }}
                                     </span>
                                     <button 
                                         @click="logout" 
@@ -249,7 +249,7 @@
                         <div class="text-center">
                             <div v-if="auth.isAuthenticated" class="space-y-4">
                                 <p class="text-lg text-gray-700">
-                                    ¡Bienvenido de nuevo, <span class="font-semibold">{{ auth.user?.name }}</span>!
+                                    ¡Bienvenido de nuevo, <span class="font-semibold">{{ auth.user && auth.user.name }}</span>!
                                 </p>
                                 <router-link 
                                     to="/dashboard" 
