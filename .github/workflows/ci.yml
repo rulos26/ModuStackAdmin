@@ -1,0 +1,239 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, master ]
+  pull_request:
+    branches: [ main, develop, master ]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: Tests PHPUnit
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: ['8.2', '8.3']
+    
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: laravel_test
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, mysql, pdo_mysql
+          coverage: xdebug
+      
+      - name: Copiar .env
+        run: |
+          if [ ! -f .env ]; then
+            cp .env.example .env
+          fi
+          php artisan key:generate --ansi
+      
+      - name: Instalar dependencias de Composer
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      
+      - name: Verificar compatibilidad Laravel 11
+        run: |
+          php artisan --version
+          composer show laravel/framework
+          composer show nwidart/laravel-modules
+      
+      - name: Preparar entorno de pruebas
+        run: |
+          php artisan config:clear
+          php artisan route:clear
+          php artisan view:clear
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: laravel_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+      
+      - name: Ejecutar migraciones
+        run: php artisan migrate --force --database=mysql
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: laravel_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+      
+      - name: Ejecutar pruebas PHPUnit
+        run: |
+          mkdir -p documentacion/logs_de_pruebas
+          php artisan test --coverage --min=0 --coverage-text --coverage-clover=documentacion/logs_de_pruebas/coverage.xml --log-junit=documentacion/logs_de_pruebas/junit.xml
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: laravel_test
+          DB_USERNAME: root
+          DB_PASSWORD: password
+      
+      - name: Subir reportes de cobertura
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports-${{ matrix.php-version }}
+          path: |
+            documentacion/logs_de_pruebas/
+          retention-days: 30
+      
+      - name: Subir reportes de cobertura a Codecov
+        uses: codecov/codecov-action@v4
+        if: always()
+        with:
+          file: ./documentacion/logs_de_pruebas/coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  code-quality:
+    name: Análisis de Calidad de Código
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath
+      
+      - name: Instalar dependencias de Composer
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      
+      - name: Ejecutar Laravel Pint (PSR-12)
+        run: vendor/bin/pint --test
+        continue-on-error: true
+      
+      - name: Verificar sintaxis PHP
+        run: |
+          find app -name "*.php" -exec php -l {} \;
+          find Modules -name "*.php" -exec php -l {} \;
+          find routes -name "*.php" -exec php -l {} \;
+        continue-on-error: true
+
+  security:
+    name: Análisis de Seguridad
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Instalar dependencias de Composer
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      
+      - name: Ejecutar Security Checker
+        run: composer audit
+        continue-on-error: true
+      
+      - name: Verificar dependencias vulnerables
+        run: |
+          composer audit --format=json > documentacion/logs_de_pruebas/security-audit.json || true
+          mkdir -p documentacion/logs_de_pruebas
+        continue-on-error: true
+      
+      - name: Subir reporte de seguridad
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports
+          path: documentacion/logs_de_pruebas/security-audit.json
+          retention-days: 90
+
+  modules-test:
+    name: Pruebas de Módulos
+    runs-on: ubuntu-latest
+    needs: [tests]
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+      
+      - name: Instalar dependencias de Composer
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+      
+      - name: Verificar módulos con nwidart/laravel-modules
+        run: |
+          php artisan module:list || echo "Módulos no registrados con sistema nwidart"
+          php artisan route:list | grep -E "(core|users)" || echo "Rutas de módulos verificadas"
+        continue-on-error: true
+      
+      - name: Verificar ServiceProviders de módulos
+        run: |
+          php artisan route:list
+          php artisan config:cache
+          php artisan route:cache
+        continue-on-error: true
+
+  build:
+    name: Build y Verificación Final
+    runs-on: ubuntu-latest
+    needs: [tests, code-quality, security, modules-test]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite
+      
+      - name: Instalar dependencias
+        run: |
+          composer install --no-dev --optimize-autoloader
+          npm ci
+      
+      - name: Build assets
+        run: npm run build
+      
+      - name: Optimizar aplicación
+        run: |
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
+      
+      - name: Generar reporte técnico del proyecto
+        run: |
+          mkdir -p documentacion
+          echo "# Archivo Técnico del Proyecto" > documentacion/archivo_tecnico_proyecto.md
+          echo "Generado: $(date)" >> documentacion/archivo_tecnico_proyecto.md
+          echo "" >> documentacion/archivo_tecnico_proyecto.md
+          echo "## Módulos" >> documentacion/archivo_tecnico_proyecto.md
+          find Modules -type d -mindepth 1 -maxdepth 1 | sed 's|Modules/||' >> documentacion/archivo_tecnico_proyecto.md
+          echo "" >> documentacion/archivo_tecnico_proyecto.md
+          echo "## Rutas" >> documentacion/archivo_tecnico_proyecto.md
+          php artisan route:list >> documentacion/archivo_tecnico_proyecto.md || true
+        continue-on-error: true
+

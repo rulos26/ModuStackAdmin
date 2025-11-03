@@ -1,0 +1,137 @@
+stages:
+  - tests
+  - code-quality
+  - security
+  - build
+
+variables:
+  PHP_VERSION: "8.2"
+  MYSQL_ROOT_PASSWORD: "password"
+  MYSQL_DATABASE: "laravel_test"
+  MYSQL_USER: "root"
+  MYSQL_PASSWORD: "password"
+
+cache:
+  paths:
+    - vendor/
+    - node_modules/
+
+tests:php82:
+  stage: tests
+  image: php:8.2-fpm
+  services:
+    - mysql:8.0
+  variables:
+    DB_HOST: mysql
+    DB_PORT: 3306
+    DB_DATABASE: laravel_test
+    DB_USERNAME: root
+    DB_PASSWORD: password
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git unzip libzip-dev libicu-dev libxml2-dev libonig-dev
+    - docker-php-ext-install pdo_mysql zip intl xml mbstring
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --no-progress --prefer-dist --optimize-autoloader
+    - cp .env.example .env
+    - php artisan key:generate
+  script:
+    - php artisan config:clear
+    - php artisan route:clear
+    - php artisan migrate --force
+    - mkdir -p documentacion/logs_de_pruebas
+    - php artisan test --coverage --coverage-clover=documentacion/logs_de_pruebas/coverage.xml --log-junit=documentacion/logs_de_pruebas/junit.xml
+  artifacts:
+    reports:
+      junit: documentacion/logs_de_pruebas/junit.xml
+    paths:
+      - documentacion/logs_de_pruebas/
+    expire_in: 30 days
+  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
+
+tests:php83:
+  stage: tests
+  image: php:8.3-fpm
+  services:
+    - mysql:8.0
+  variables:
+    DB_HOST: mysql
+    DB_PORT: 3306
+    DB_DATABASE: laravel_test
+    DB_USERNAME: root
+    DB_PASSWORD: password
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git unzip libzip-dev libicu-dev libxml2-dev libonig-dev
+    - docker-php-ext-install pdo_mysql zip intl xml mbstring
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --no-progress --prefer-dist --optimize-autoloader
+    - cp .env.example .env
+    - php artisan key:generate
+  script:
+    - php artisan config:clear
+    - php artisan route:clear
+    - php artisan migrate --force
+    - mkdir -p documentacion/logs_de_pruebas
+    - php artisan test --coverage --coverage-clover=documentacion/logs_de_pruebas/coverage.xml --log-junit=documentacion/logs_de_pruebas/junit.xml
+  artifacts:
+    reports:
+      junit: documentacion/logs_de_pruebas/junit.xml
+    paths:
+      - documentacion/logs_de_pruebas/
+    expire_in: 30 days
+
+code-quality:
+  stage: code-quality
+  image: php:8.2-fpm
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git unzip libzip-dev
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --no-progress --prefer-dist --optimize-autoloader
+  script:
+    - vendor/bin/pint --test
+    - find app -name "*.php" -exec php -l {} \;
+    - find Modules -name "*.php" -exec php -l {} \;
+  allow_failure: true
+
+security:
+  stage: security
+  image: php:8.2-fpm
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git unzip curl
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --no-progress --prefer-dist --optimize-autoloader
+  script:
+    - mkdir -p documentacion/logs_de_pruebas
+    - php composer.phar audit --format=json > documentacion/logs_de_pruebas/security-audit.json || true
+  artifacts:
+    paths:
+      - documentacion/logs_de_pruebas/security-audit.json
+    expire_in: 90 days
+  allow_failure: true
+
+build:
+  stage: build
+  image: php:8.2-fpm
+  only:
+    - main
+    - master
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq git unzip libzip-dev curl
+    - curl -sS https://getcomposer.org/installer | php
+    - curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+    - apt-get install -y nodejs
+    - php composer.phar install --no-dev --optimize-autoloader
+    - npm ci
+  script:
+    - npm run build
+    - php artisan config:cache
+    - php artisan route:cache
+    - php artisan view:cache
+  artifacts:
+    paths:
+      - public/build/
+    expire_in: 1 week

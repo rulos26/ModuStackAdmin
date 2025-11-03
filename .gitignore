@@ -21,3 +21,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Reportes de pruebas (mantener XML y texto, excluir HTML)
+documentacion/logs_de_pruebas/coverage-html/
+*.log
