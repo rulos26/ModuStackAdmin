@@ -1,7 +1,7 @@
 # Documentación - Portal Principal ModuStack Admin
 
 **Fecha de Creación:** 2025-11-03  
-**Módulo:** Portal Principal  
+**Componente:** Portal Principal  
 **Versión:** 1.0.0
 
 ---
@@ -87,7 +87,7 @@ Se ha creado un portal principal con Bootstrap 5 que actúa como punto de entrad
 ### Prueba en Producción
 1. Subir `index.html` a la raíz del servidor
 2. Verificar que los CDN de Bootstrap cargan correctamente
-3. Probar la redirección al módulo ModuStackUser
+3. Probar la redirección al componente ModuStackUser
 4. Validar que no hay errores de consola (F12)
 
 ### Validaciones de Calidad
@@ -142,7 +142,7 @@ Se ha creado un portal principal con Bootstrap 5 que actúa como punto de entrad
 ### Arquitectura
 - Archivo estático sin backend
 - Sin dependencias de frameworks adicionales
-- Escalable para añadir más módulos
+- Escalable para añadir más componentes
 - Fácil mantenimiento y actualización
 
 ---
@@ -150,7 +150,7 @@ Se ha creado un portal principal con Bootstrap 5 que actúa como punto de entrad
 ## 📝 Notas Adicionales
 
 ### Posibles Mejoras Futuras
-1. Añadir más módulos al portal (tarjetas adicionales)
+1. Añadir más componentes al portal (tarjetas adicionales)
 2. Implementar sistema de autenticación centralizado
 3. Agregar menú de navegación persistente
 4. Incluir dashboard con estadísticas generales
@@ -159,7 +159,7 @@ Se ha creado un portal principal con Bootstrap 5 que actúa como punto de entrad
 ### Integración con Laravel
 Este portal es independiente de Laravel, pero se integra visualmente con:
 - **ModuStackUser**: Aplicación Laravel 12 en `ModuStackUser/`
-- **Futuros Módulos**: Estructura preparada para expansión
+- **Futuros Componentes**: Estructura preparada para expansión
 
 ---
 

@@ -8,7 +8,7 @@
 
 ## 📊 Resumen Ejecutivo
 
-**ModuStackAdmin** es una plataforma modular de administración construida sobre Laravel 12 con arquitectura modular, diseñada para ser extensible y mantenible. Este archivo documenta todos los componentes, archivos, rutas, módulos y dependencias del proyecto.
+**ModuStackAdmin** es una plataforma de administración construida sobre Laravel 12 con arquitectura tradicional, diseñada para ser extensible y mantenible. Este archivo documenta todos los componentes, archivos, rutas, controladores, modelos y dependencias del proyecto.
 
 ---
 
@@ -25,7 +25,7 @@ ModuStackAdmin/
 │   ├── documentacion_portal_principal.md   # Portal principal
 │   └── mejoras_2025-11-03.md              # Mejoras sugeridas
 ├── index.html                              # Portal principal (Bootstrap 5)
-├── ModuStackUser/                          # Módulo principal Laravel
+├── ModuStackUser/                          # Aplicación Laravel principal
 │   ├── app/                                # Código de aplicación
 │   │   ├── Http/
 │   │   │   └── Controllers/
@@ -97,9 +97,9 @@ ModuStackAdmin/
 
 ---
 
-## 📦 Módulos del Sistema
+## 📦 Componentes del Sistema
 
-### Módulo: Portal Principal
+### Componente: Portal Principal
 
 **Ubicación:** `/index.html`  
 **Tipo:** Frontend Estático  
@@ -107,7 +107,7 @@ ModuStackAdmin/
 **Versión:** 1.0.0
 
 **Descripción:**  
-Portal de entrada principal con Bootstrap 5 que proporciona navegación visual a los módulos del sistema.
+Portal de entrada principal con Bootstrap 5 que proporciona navegación visual a los componentes del sistema.
 
 **Tecnologías:**
 - HTML5
@@ -131,7 +131,7 @@ Portal de entrada principal con Bootstrap 5 que proporciona navegación visual a
 
 ---
 
-### Módulo: ModuStackUser
+### Componente: ModuStackUser
 
 **Ubicación:** `/ModuStackUser/`  
 **Tipo:** Aplicación Laravel  
@@ -139,7 +139,7 @@ Portal de entrada principal con Bootstrap 5 que proporciona navegación visual a
 **Versión:** 12.0 (Laravel 12)
 
 **Descripción:**  
-Aplicación base de Laravel 12 para gestión de usuarios y sistema modular.
+Aplicación base de Laravel 12 con arquitectura tradicional para gestión de usuarios y funcionalidades administrativas.
 
 **Tecnologías:**
 - PHP 8.2+
@@ -348,9 +348,9 @@ AUTH_PASSWORD_TIMEOUT
   **Impacto:** Difícil auditoría de errores  
   **Recomendación:** Crear `log_errores/` según reglas
 
-- ⚠️ **Falta estructura modular**  
-  **Impacto:** Código no modularizado  
-  **Recomendación:** Instalar nwidart/laravel-modules
+- ⚠️ **Falta organización de componentes**  
+  **Impacto:** Código puede mejorar en estructura  
+  **Recomendación:** Organizar en servicios, repositorios y capas según buenas prácticas Laravel
 
 #### Importantes
 - ⚠️ **Sin autenticación implementada**  
@@ -372,12 +372,12 @@ AUTH_PASSWORD_TIMEOUT
 
 ### Arquitectura
 
-#### 1. Implementar Sistema Modular
+#### 1. Organizar Componentes en Capas
 ```
-Problema: Código no está estructurado modularmente
-Solución: Instalar nwidart/laravel-modules
-Beneficio: Escalabilidad y mantenibilidad
-Prioridad: Alta
+Problema: Código puede mejorar en estructura y separación de responsabilidades
+Solución: Implementar arquitectura por capas (Controllers, Services, Repositories)
+Beneficio: Escalabilidad, mantenibilidad y testabilidad
+Prioridad: Media
 ```
 
 #### 2. Unificar Sistema de Logs
@@ -427,10 +427,10 @@ HTTPS: Forzar en producción
 ## 🔮 Roadmap Sugerido
 
 ### Fase 1: Fundación (Semana 1-2)
-- [ ] Instalar nwidart/laravel-modules
-- [ ] Crear estructura log_errores/
+- [x] Crear estructura log_errores/
+- [x] Configurar .htaccess
 - [ ] Implementar autenticación base
-- [ ] Configurar .htaccess
+- [ ] Organizar código en servicios y repositorios
 
 ### Fase 2: Optimización (Semana 3-4)
 - [ ] Configurar sistema de caché
@@ -439,7 +439,7 @@ HTTPS: Forzar en producción
 - [ ] Configurar CDN
 
 ### Fase 3: Expansión (Semana 5-6)
-- [ ] Crear módulos adicionales
+- [ ] Crear componentes adicionales (módulos funcionales)
 - [ ] Dashboard de administración
 - [ ] Sistema de roles y permisos
 - [ ] API RESTful
@@ -465,7 +465,6 @@ HTTPS: Forzar en producción
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
 
 ### Repositorios de Referencia
-- [nwidart/laravel-modules](https://github.com/nwidart/laravel-modules)
 - [Laravel Breeze](https://github.com/laravel/breeze)
 - [Laravel Jetstream](https://jetstream.laravel.com/)
 

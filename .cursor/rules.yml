@@ -8,14 +8,14 @@ rules:
        - 'bajo/' para errores menores o de interfaz.
        - 'medio/' para errores funcionales o de lógica de negocio.
        - 'alto/' para errores críticos, de seguridad o pérdida de datos.
-     Cada archivo de log debe contener: fecha, módulo, archivo afectado, descripción, y acción correctiva aplicada."
+     Cada archivo de log debe contener: fecha, componente/área afectada, archivo afectado, descripción, y acción correctiva aplicada."
 
-  - "Toda solución implementada a un error o mejora debe estar validada para compatibilidad con Laravel 11 y el complemento modular (nwidart/laravel-modules).
+  - "Toda solución implementada a un error o mejora debe estar validada para compatibilidad con Laravel 12 (arquitectura tradicional, sin complementos modulares).
      Antes de confirmarse, debe verificarse la fuente en internet (documentación oficial, foros técnicos o repositorios confiables)
      para asegurar una respuesta óptima, segura y alineada con buenas prácticas actuales."
 
-  - "Después de finalizar cualquier cambio, funcionalidad o módulo, este debe documentarse dentro de una carpeta bajo 'documentacion/'.
-     El nombre de la carpeta debe seguir el formato: 'documentacion_mod_<nombre_del_modulo>'.
+  - "Después de finalizar cualquier cambio, funcionalidad o componente, este debe documentarse dentro de una carpeta bajo 'documentacion/'.
+     El nombre de la carpeta debe seguir el formato: 'documentacion_<nombre_del_componente>' (ejemplo: 'documentacion_autenticacion', 'documentacion_api').
      Dentro de ella, debe incluirse un archivo Markdown (.md) con:
        - Descripción general.
        - Archivos modificados o creados.
@@ -25,7 +25,7 @@ rules:
      Toda nueva optimización, mejora o funcionalidad sugerida debe registrarse como documento independiente dentro de 'documentacion/'
      con referencia a las fuentes técnicas verificadas en internet."
 
-  - "Todo módulo, componente o función —sin importar su tamaño— debe contar con una prueba automatizada (testing) que verifique su correcto funcionamiento.
+  - "Todo componente, controlador, modelo o función —sin importar su tamaño— debe contar con una prueba automatizada (testing) que verifique su correcto funcionamiento.
     Estas pruebas deben:
       - Crearse preferiblemente con PHPUnit (para backend) o Jest/Vite (para frontend).
       - Validar el comportamiento esperado, las rutas, las respuestas y los permisos de acceso.
@@ -37,18 +37,18 @@ rules:
   #   - Las pruebas deben poder ejecutarse y automatizarse desde consola mediante un comando, por ejemplo:
   #       php artisan test --parallel --coverage
   #     o desde un panel visual integrado en el sistema.
-  #   - Debe existir una opción de automatización (por CRON o Git Hook) que ejecute los tests después de cada cambio detectado en un módulo.
+  #   - Debe existir una opción de automatización (por CRON o Git Hook) que ejecute los tests después de cada cambio detectado en un componente.
   #   - Los resultados deben almacenarse y versionarse para auditoría en 'documentacion/logs_de_pruebas/history/'.
   - "Cada vez que se detecte un cambio en cualquier componente del proyecto desde la raíz, generar un archivo técnico maestro que documente todos los archivos y componentes del proyecto.
      Este archivo debe:
        - Estar ubicado en 'documentacion/archivo_tecnico_proyecto.md'.
-       - Incluir lista completa de archivos, rutas, módulos y dependencias.
+       - Incluir lista completa de archivos, rutas, controladores, modelos, servicios y dependencias.
        - Señalar los componentes modificados, agregados o eliminados desde el último registro.
        - Indicar observaciones sobre posibles mejoras, refactorizaciones, problemas detectados o optimizaciones pendientes.
      Adicionalmente:
        - Generar automáticamente un archivo complementario llamado 'mejoras_<fecha>.md' en la misma carpeta, que documente:
            - Mejoras de componentes sugeridas.
            - Ajustes de rendimiento.
-           - Recomendaciones de compatibilidad con Laravel 11 y nwidart/laravel-modules.
+           - Recomendaciones de compatibilidad con Laravel 12 (arquitectura tradicional).
            - Posibles optimizaciones de código o arquitectura.
        - Todo esto debe integrarse bajo las reglas de documentación, auditoría y testing previamente definidas en la carpeta 'documentacion/'."

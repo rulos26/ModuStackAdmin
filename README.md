@@ -11,11 +11,11 @@ Sistema modular de administración construido con Laravel 12, diseñado para ser
 
 ## 📋 Descripción
 
-**ModuStackAdmin** es una plataforma de administración modular que proporciona una arquitectura base para desarrollar sistemas complejos de gestión. Caracterizado por su estructura modular, sistema de logs centralizado y documentación automatizada.
+**ModuStackAdmin** es una plataforma de administración que proporciona una arquitectura base para desarrollar sistemas complejos de gestión. Caracterizado por su arquitectura tradicional Laravel, sistema de logs centralizado y documentación automatizada.
 
 ### Características Principales
 
-- 🎯 **Arquitectura Modular**: Preparado para sistemas escalables
+- 🎯 **Arquitectura Tradicional Laravel**: Preparado para sistemas escalables
 - 🔒 **Seguridad Integrada**: Headers HTTP, compresión y protecciones
 - 📊 **Sistema de Logs**: Clasificación automática por tipo y severidad
 - 📚 **Documentación Automática**: Generación automática de docs técnicas
@@ -120,7 +120,7 @@ ModuStackAdmin/
 │       ├── bajo/
 │       ├── medio/
 │       └── alto/
-├── ModuStackUser/                   # Módulo principal Laravel
+├── ModuStackUser/                   # Aplicación Laravel principal
 │   ├── app/
 │   ├── bootstrap/
 │   ├── config/
@@ -240,8 +240,9 @@ php artisan view:clear
 # Optimizar aplicación
 php artisan optimize
 
-# Crear nuevo módulo
-php artisan module:make NombreModulo
+# Crear nuevos componentes
+php artisan make:controller NombreController
+php artisan make:service NombreService
 
 # Generar controllers, models, etc
 php artisan make:controller NombreController
@@ -278,7 +279,7 @@ Resumen:
 - ✅ Documentación base
 - ✅ Configuración de seguridad
 
-### Fase 2: Módulos (Próximo)
+### Fase 2: Componentes (Próximo)
 - [ ] Autenticación y autorización
 - [ ] Dashboard de administración
 - [ ] Sistema de roles y permisos
@@ -291,7 +292,7 @@ Resumen:
 - [ ] Optimización de queries
 
 ### Fase 4: Expansión
-- [ ] Múltiples módulos
+- [ ] Múltiples componentes funcionales
 - [ ] Integraciones externas
 - [ ] Reportes avanzados
 - [ ] Multi-idioma
