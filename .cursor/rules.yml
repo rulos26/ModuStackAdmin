@@ -10,7 +10,7 @@ rules:
        - 'alto/' para errores críticos, de seguridad o pérdida de datos.
      Cada archivo de log debe contener: fecha, módulo, archivo afectado, descripción, y acción correctiva aplicada."
 
-  - "Toda solución implementada a un error o mejora debe estar validada para compatibilidad con Laravel 12 y el complemento modular (nwidart/laravel-modules).
+  - "Toda solución implementada a un error o mejora debe estar validada para compatibilidad con Laravel 11 y el complemento modular (nwidart/laravel-modules).
      Antes de confirmarse, debe verificarse la fuente en internet (documentación oficial, foros técnicos o repositorios confiables)
      para asegurar una respuesta óptima, segura y alineada con buenas prácticas actuales."
 
@@ -49,6 +49,6 @@ rules:
        - Generar automáticamente un archivo complementario llamado 'mejoras_<fecha>.md' en la misma carpeta, que documente:
            - Mejoras de componentes sugeridas.
            - Ajustes de rendimiento.
-           - Recomendaciones de compatibilidad con Laravel 12 y nwidart/laravel-modules.
+           - Recomendaciones de compatibilidad con Laravel 11 y nwidart/laravel-modules.
            - Posibles optimizaciones de código o arquitectura.
        - Todo esto debe integrarse bajo las reglas de documentación, auditoría y testing previamente definidas en la carpeta 'documentacion/'."
