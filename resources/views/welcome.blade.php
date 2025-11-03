@@ -11,7 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="/ModuStackAdmin/css/auth-styles.css">
+    <link rel="stylesheet" href="{{ asset('css/auth-styles.css') }}">
     
     <!-- Vue 3 desde CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -26,6 +26,6 @@
     <div id="app"></div>
     
     <!-- Aplicación de Autenticación con Debug -->
-    <script src="/ModuStackAdmin/js/auth-app.js"></script>
+    <script src="{{ asset('js/auth-app.js') }}"></script>
     </body>
 </html>
