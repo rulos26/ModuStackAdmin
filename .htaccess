@@ -8,6 +8,10 @@
     # Permitir acceso completo a ModuStackUser - NO procesar estas rutas
     RewriteCond %{REQUEST_URI} ^/ModuStackUser(/.*)?$
     RewriteRule ^ - [L]
+    
+    # Permitir acceso completo a ModuStackbase - NO procesar estas rutas
+    RewriteCond %{REQUEST_URI} ^/ModuStackbase(/.*)?$
+    RewriteRule ^ - [L]
 
     # Redirigir raíz vacía a index.html
     RewriteCond %{REQUEST_URI} ^/$
@@ -17,6 +21,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/ModuStackUser
+    RewriteCond %{REQUEST_URI} !^/ModuStackbase
     RewriteCond %{REQUEST_METHOD} GET
     RewriteRule ^ index.html [L]
 </IfModule>
