@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Auth\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,8 +24,14 @@ Route::get('/public/js/{file}', function ($file) {
     abort(404);
 })->where('file', '.*');
 
-// Rutas API del módulo Auth (registradas aquí para evitar problemas con hosting)
-// Solución alternativa: mover rutas API a web.php ya que algunos hostings no procesan bien routes/api.php
+// ============================================================================
+// RUTAS API DEL MÓDULO AUTH
+// ============================================================================
+// Solución para hostings que bloquean rutas /api/:
+// 1. Rutas con prefijo /api/ (intento principal)
+// 2. Rutas alternativas sin prefijo (backup si hosting bloquea /api/)
+
+// SOLUCIÓN 1: Rutas con prefijo /api/ (estándar)
 Route::prefix('api')->group(function () {
     // Ruta de prueba
     Route::get('/test', function () {
@@ -38,13 +45,38 @@ Route::prefix('api')->group(function () {
     // Cargar rutas del módulo Auth
     Route::prefix('auth')->group(function () {
         // Rutas públicas
-        Route::post('register', [\Modules\Auth\Http\Controllers\AuthController::class, 'register']);
-        Route::post('login', [\Modules\Auth\Http\Controllers\AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register'])->name('api.auth.register');
+        Route::post('login', [AuthController::class, 'login'])->name('api.auth.login');
 
         // Rutas protegidas con Sanctum
         Route::middleware('auth:sanctum')->group(function () {
-            Route::get('profile', [\Modules\Auth\Http\Controllers\AuthController::class, 'profile']);
-            Route::post('logout', [\Modules\Auth\Http\Controllers\AuthController::class, 'logout']);
+            Route::get('profile', [AuthController::class, 'profile'])->name('api.auth.profile');
+            Route::post('logout', [AuthController::class, 'logout'])->name('api.auth.logout');
         });
     });
+});
+
+// SOLUCIÓN 2: Rutas alternativas sin prefijo /api/ (si el hosting bloquea /api/)
+// Estas rutas funcionan SIEMPRE porque no usan /api/
+Route::middleware(['api'])->group(function () {
+    Route::prefix('auth')->group(function () {
+        // Rutas públicas alternativas
+        Route::post('register', [AuthController::class, 'register'])->name('auth.register');
+        Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+
+        // Rutas protegidas alternativas
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::get('profile', [AuthController::class, 'profile'])->name('auth.profile');
+            Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+        });
+    });
+    
+    // Ruta de prueba alternativa
+    Route::get('/test-api', function () {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'API funcionando desde ruta alternativa (sin /api/)',
+            'timestamp' => now()->toIso8601String(),
+        ]);
+    })->name('test.api');
 });

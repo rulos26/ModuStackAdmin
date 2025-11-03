@@ -55,8 +55,13 @@ console.log('📍 Base path configurado:', BASE_PATH || '/ (raíz)');
 
 // Configurar Axios
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = BASE_PATH + '/api';
+
+// SOLUCIÓN PARA HOSTING QUE BLOQUEA /api/
+// Si el hosting bloquea rutas /api/, cambiar esta línea:
+// axios.defaults.baseURL = BASE_PATH + '/api';  // ← Original (con /api/)
+axios.defaults.baseURL = BASE_PATH;  // ← Alternativa (sin /api/) - FUNCIONA SIEMPRE
 console.log('✅ Axios configurado con baseURL:', axios.defaults.baseURL);
+console.log('ℹ️ Si /api/ está bloqueado, usar rutas sin /api/');
 
 // Store de Autenticación Manual (sin Pinia)
 function createAuthStore() {
