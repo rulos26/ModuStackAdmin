@@ -6,8 +6,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Rutas para servir archivos estáticos si es necesario
-Route::get('/css/{file}', function ($file) {
+// Rutas para servir archivos estáticos desde /public/ (compatibilidad)
+Route::get('/public/css/{file}', function ($file) {
     $path = public_path("css/{$file}");
     if (file_exists($path)) {
         return response()->file($path);
@@ -15,7 +15,7 @@ Route::get('/css/{file}', function ($file) {
     abort(404);
 })->where('file', '.*');
 
-Route::get('/js/{file}', function ($file) {
+Route::get('/public/js/{file}', function ($file) {
     $path = public_path("js/{$file}");
     if (file_exists($path)) {
         return response()->file($path);
