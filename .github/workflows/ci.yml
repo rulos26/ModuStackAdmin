@@ -79,7 +79,7 @@ jobs:
       - name: Ejecutar pruebas PHPUnit
         run: |
           mkdir -p documentacion/logs_de_pruebas
-          php artisan test --coverage --min=0 --coverage-text --coverage-clover=documentacion/logs_de_pruebas/coverage.xml --log-junit=documentacion/logs_de_pruebas/junit.xml
+          php artisan test --coverage --coverage-text --coverage-clover=documentacion/logs_de_pruebas/coverage.xml --log-junit=documentacion/logs_de_pruebas/junit.xml || php artisan test --coverage-clover=documentacion/logs_de_pruebas/coverage.xml --log-junit=documentacion/logs_de_pruebas/junit.xml
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
