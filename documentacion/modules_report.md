@@ -1,12 +1,45 @@
 # Reporte Automático de Módulos
 
-**Fecha de generación:** 2025-11-03 04:33:28
+**Fecha de generación:** 2025-11-03 04:47:54
 
 ---
 
 ## Resumen
 
-Total de módulos: **3**
+Total de módulos: **4**
+
+---
+
+## Módulo: Auth
+
+### Información General
+
+- **Nombre:** Auth
+- **Alias:** auth
+- **Descripción:** Módulo de autenticación con Laravel Sanctum
+- **Prioridad:** 1
+- **Versión:** N/A
+
+### Service Providers
+
+- ✅ `Modules\Auth\Providers\AuthServiceProvider`
+
+### Rutas Registradas (4)
+
+| Método | URI | Nombre |
+|--------|-----|--------|
+| POST | `auth/register` | N/A |
+| POST | `auth/login` | N/A |
+| GET|HEAD | `auth/profile` | N/A |
+| POST | `auth/logout` | N/A |
+
+### Seeders (1)
+
+- `AuthSeeder.php`
+
+### Tests (1)
+
+- `Feature\AuthTest.php`
 
 ---
 
