@@ -247,23 +247,124 @@ const Navbar = {
     `
 };
 
-// Componente HomeView - Redirige a login
+// Componente HomeView - Página de Bienvenida
 const HomeView = {
     setup() {
+        const auth = useAuthStore();
         const router = VueRouter.useRouter();
-        console.log('🏠 HomeView - Redirigiendo a login...');
         
+        console.log('🏠 HomeView - Página de bienvenida cargada');
+        console.log('🔐 Estado auth:', auth.isAuthenticated ? 'Autenticado' : 'No autenticado');
+        
+        // Si hay token pero no hay usuario, intentar cargar perfil
         onMounted(() => {
-            router.push('/login');
+            if (auth.token && !auth.user) {
+                console.log('📊 HomeView - Cargando perfil del usuario...');
+                auth.fetchProfile();
+            }
         });
         
-        return {};
+        return { auth };
     },
     template: `
-        <div class="flex items-center justify-center min-h-screen">
-            <div class="text-center">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p class="mt-4 text-gray-600">Redirigiendo...</p>
+        <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <!-- Encabezado Principal -->
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl font-bold text-gray-900 mb-4">
+                        Sistema Modular Laravel
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8">
+                        Autenticación segura con Laravel Sanctum y Vue 3
+                    </p>
+                </div>
+                
+                <!-- Características -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                    <!-- Característica 1 -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-lg mb-4">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Autenticación Segura</h3>
+                        <p class="text-gray-600">Sistema de autenticación con tokens Sanctum</p>
+                    </div>
+                    
+                    <!-- Característica 2 -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Módulos Integrados</h3>
+                        <p class="text-gray-600">Arquitectura modular con nwidart/laravel-modules</p>
+                    </div>
+                    
+                    <!-- Característica 3 -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mb-4">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a4 4 0 004-4v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Frontend Moderno</h3>
+                        <p class="text-gray-600">Interfaz con Vue 3 y TailwindCSS desde CDN</p>
+                    </div>
+                </div>
+                
+                <!-- Área de Acción según Estado -->
+                <div class="text-center">
+                    <!-- Si está autenticado -->
+                    <div v-if="auth.isAuthenticated" class="space-y-4">
+                        <div class="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+                            <div class="mb-6">
+                                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <p class="text-lg text-gray-700">
+                                    ¡Bienvenido de nuevo, <span class="font-semibold text-blue-600">{{ auth.user && auth.user.name }}</span>!
+                                </p>
+                                <p class="text-sm text-gray-500 mt-2">
+                                    Estás autenticado y listo para comenzar
+                                </p>
+                            </div>
+                            <router-link 
+                                to="/dashboard" 
+                                class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md"
+                            >
+                                Ir al Dashboard
+                            </router-link>
+                        </div>
+                    </div>
+                    
+                    <!-- Si NO está autenticado -->
+                    <div v-else class="space-y-4">
+                        <div class="bg-white rounded-lg shadow-lg p-8 max-w-md mx-auto">
+                            <p class="text-lg text-gray-700 mb-6">
+                                Comienza a usar el sistema ahora
+                            </p>
+                            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                                <router-link 
+                                    to="/login" 
+                                    class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-md text-center"
+                                >
+                                    Iniciar Sesión
+                                </router-link>
+                                <router-link 
+                                    to="/register" 
+                                    class="inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium shadow-md text-center"
+                                >
+                                    Crear Cuenta
+                                </router-link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `
@@ -683,12 +784,12 @@ const AuthLayout = {
     `
 };
 
-// Configurar Router - LOGIN como principal
+// Configurar Router - HOME como página principal
 const routes = [
     {
         path: '/',
         name: 'home',
-        redirect: '/login', // Redirige automáticamente a login
+        component: HomeView, // Página de bienvenida
     },
     {
         path: '/login',
