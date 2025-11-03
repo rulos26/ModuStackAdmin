@@ -5,11 +5,20 @@
     RewriteEngine On
     RewriteBase /
 
-    # Redirigir todas las peticiones no existentes a index.html
+    # Permitir acceso completo a ModuStackUser - NO procesar estas rutas
+    RewriteCond %{REQUEST_URI} ^/ModuStackUser(/.*)?$
+    RewriteRule ^ - [L]
+
+    # Redirigir raíz vacía a index.html
+    RewriteCond %{REQUEST_URI} ^/$
+    RewriteRule ^ index.html [L]
+
+    # Para otras rutas que no existen, servir index.html si es una petición GET
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^/ModuStackUser
-    RewriteRule ^$ index.html [L]
+    RewriteCond %{REQUEST_METHOD} GET
+    RewriteRule ^ index.html [L]
 </IfModule>
 
 # Seguridad - Headers HTTP
