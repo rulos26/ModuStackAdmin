@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <title>Sistema Modular - Autenticación</title>
@@ -22,7 +22,7 @@
     <!-- Axios desde CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     
-    <style>
+            <style>
         .input {
             @apply appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm;
         }
@@ -32,11 +32,12 @@
         .btn-danger {
             @apply bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
         }
-    </style>
-</head>
+            </style>
+    </head>
 <body class="bg-gray-50">
     <div id="app"></div>
     
+    @verbatim
     <script>
         const { createApp, ref, reactive, computed, onMounted } = Vue;
         const { createRouter, createWebHistory } = VueRouter;
@@ -147,7 +148,7 @@
                                 <router-link to="/" class="font-bold text-xl hover:text-gray-300 transition-colors">
                                     Sistema Modular
                                 </router-link>
-                            </div>
+                        </div>
                             
                             <div class="flex items-center space-x-4">
                                 <router-link 
@@ -187,7 +188,7 @@
                             </div>
                         </div>
                     </div>
-                </nav>
+                            </nav>
             `
         };
 
@@ -223,8 +224,8 @@
                                 </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Autenticación Segura</h3>
                                 <p class="text-gray-600">Sistema de autenticación con tokens Sanctum</p>
-                            </div>
-                            
+                                </div>
+
                             <div class="bg-white rounded-lg shadow-lg p-6">
                                 <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg mb-4">
                                     <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -233,8 +234,8 @@
                                 </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Módulos Integrados</h3>
                                 <p class="text-gray-600">Arquitectura modular con nwidart/laravel-modules</p>
-                            </div>
-                            
+                                        </div>
+
                             <div class="bg-white rounded-lg shadow-lg p-6">
                                 <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-lg mb-4">
                                     <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -243,9 +244,9 @@
                                 </div>
                                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Frontend Moderno</h3>
                                 <p class="text-gray-600">Interfaz con Vue 3, Pinia y TailwindCSS</p>
-                            </div>
-                        </div>
-                        
+                                        </div>
+                                    </div>
+
                         <div class="text-center">
                             <div v-if="auth.isAuthenticated" class="space-y-4">
                                 <p class="text-lg text-gray-700">
@@ -466,8 +467,8 @@
                                     :class="{ 'border-red-500': errors.name }"
                                 />
                                 <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name[0] }}</p>
-                            </div>
-                            
+                                </div>
+
                             <div>
                                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
                                     Correo electrónico
@@ -499,8 +500,8 @@
                                     :class="{ 'border-red-500': errors.password }"
                                 />
                                 <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password[0] }}</p>
-                            </div>
-                            
+                                </div>
+
                             <div>
                                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2">
                                     Confirmar contraseña
@@ -624,14 +625,14 @@
                                         </div>
                                     </dl>
                                 </div>
-                                
+
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                     <h3 class="text-sm font-medium text-blue-900 mb-2">Estado de Autenticación</h3>
                                     <p class="text-sm text-blue-700">
                                         Estás autenticado usando Laravel Sanctum. Tu token está activo y puedes acceder a todas las rutas protegidas.
                                     </p>
                                 </div>
-                                
+
                                 <div class="flex justify-end space-x-4 pt-4 border-t">
                                     <button 
                                         @click="handleLogout" 
@@ -671,7 +672,7 @@
                 <div>
                     <Navbar />
                     <router-view />
-                </div>
+            </div>
             `
         };
 
@@ -723,5 +724,6 @@
         app.use(router);
         app.mount('#app');
     </script>
+    @endverbatim
 </body>
 </html>
