@@ -13,5 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Ruta de prueba para verificar que las rutas API funcionan
+Route::get('/test', function () {
+    return response()->json([
+        'status' => 'success',
+        'message' => 'API funcionando correctamente',
+        'timestamp' => now()->toIso8601String(),
+    ]);
+});
+
 // Las rutas del módulo Auth se cargan desde AuthServiceProvider
 
