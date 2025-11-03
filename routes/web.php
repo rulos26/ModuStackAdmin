@@ -22,3 +22,29 @@ Route::get('/public/js/{file}', function ($file) {
     }
     abort(404);
 })->where('file', '.*');
+
+// Rutas API del módulo Auth (registradas aquí para evitar problemas con hosting)
+// Solución alternativa: mover rutas API a web.php ya que algunos hostings no procesan bien routes/api.php
+Route::prefix('api')->group(function () {
+    // Ruta de prueba
+    Route::get('/test', function () {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'API funcionando correctamente desde web.php',
+            'timestamp' => now()->toIso8601String(),
+        ]);
+    });
+    
+    // Cargar rutas del módulo Auth
+    Route::prefix('auth')->group(function () {
+        // Rutas públicas
+        Route::post('register', [\Modules\Auth\Http\Controllers\AuthController::class, 'register']);
+        Route::post('login', [\Modules\Auth\Http\Controllers\AuthController::class, 'login']);
+
+        // Rutas protegidas con Sanctum
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::get('profile', [\Modules\Auth\Http\Controllers\AuthController::class, 'profile']);
+            Route::post('logout', [\Modules\Auth\Http\Controllers\AuthController::class, 'logout']);
+        });
+    });
+});
