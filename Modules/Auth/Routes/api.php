@@ -12,7 +12,9 @@ use Modules\Auth\Http\Controllers\AuthController;
 |
 */
 
-Route::prefix('api/auth')->group(function () {
+// Rutas API del módulo Auth
+// El prefijo 'api' se aplica en AuthServiceProvider
+Route::prefix('auth')->group(function () {
     // Rutas públicas
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
