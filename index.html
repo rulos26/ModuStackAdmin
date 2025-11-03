@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ModuStack - Panel de Administración Modular">
+    <title>ModuStack Admin - Portal Principal</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Animaciones de fondo */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-animation div {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .bg-animation div:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: #667eea;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-animation div:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: #764ba2;
+            top: 50%;
+            right: 10%;
+            animation-delay: 5s;
+        }
+
+        .bg-animation div:nth-child(3) {
+            width: 450px;
+            height: 450px;
+            background: #f093fb;
+            bottom: 10%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(50px, -50px) rotate(180deg);
+            }
+        }
+
+        /* Contenedor principal */
+        .main-container {
+            max-width: 1400px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* Header con efecto glass */
+        .hero-header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideDown 1s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-header p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        /* Tarjetas de acceso */
+        .access-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1s ease-out backwards;
+        }
+
+        .access-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .access-card:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .access-card:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .access-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .access-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .access-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Iconos de las tarjetas */
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+
+        .access-card:hover .card-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Botón de acceso */
+        .btn-access {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-access::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-access:hover::before {
+            left: 100%;
+        }
+
+        .btn-access:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: white;
+            color: white;
+            transform: scale(1.05);
+            text-decoration: none;
+        }
+
+        /* Badge de estado */
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(76, 175, 80, 0.3);
+            color: #a5d6a7;
+            border: 1px solid rgba(76, 175, 80, 0.5);
+        }
+
+        /* Footer */
+        .footer-info {
+            text-align: center;
+            padding: 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .footer-info i {
+            margin-right: 8px;
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-header p {
+                font-size: 1.1rem;
+            }
+
+            .card-icon {
+                font-size: 3rem;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .access-card {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animación de fondo -->
+    <div class="bg-animation">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+
+    <div class="main-container">
+        <!-- Header Hero -->
+        <div class="hero-header">
+            <h1><i class="bi bi-stack"></i> ModuStack</h1>
+            <p>Panel de Administración Modular - Laravel 12</p>
+        </div>
+
+        <!-- Tarjetas de Acceso -->
+        <div class="row g-4">
+            <!-- Tarjeta Principal: ModuStackUser -->
+            <div class="col-lg-12 col-md-12">
+                <div class="access-card" onclick="window.location.href='ModuStackUser/'">
+                    <span class="status-badge status-active">
+                        <i class="bi bi-check-circle"></i> Activo
+                    </span>
+                    
+                    <div class="card-icon">
+                        <i class="bi bi-person-circle" style="color: #fff;"></i>
+                    </div>
+                    
+                    <h3 class="card-title">ModuStack User</h3>
+                    <p class="card-description">
+                        Accede al panel principal de usuarios. Sistema modular Laravel con autenticación,
+                        gestión de roles y permisos, dashboard interactivo y todas las funcionalidades
+                        del módulo de usuarios.
+                    </p>
+                    
+                    <a href="ModuStackUser/" class="btn-access">
+                        <i class="bi bi-arrow-right-circle"></i>
+                        Acceder Ahora
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Información -->
+        <div class="footer-info">
+            <p>
+                <i class="bi bi-server"></i>
+                <strong>Sistema en Producción</strong> | 
+                <i class="bi bi-shield-check"></i>
+                Seguro y Optimizado
+            </p>
+            <p class="mt-2" style="font-size: 0.9rem; opacity: 0.8;">
+                <i class="bi bi-gear"></i> Laravel 12 Framework | 
+                <i class="bi bi-code-slash"></i> PHP 8.2+ | 
+                <i class="bi bi-bootstrap"></i> Bootstrap 5.3
+            </p>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
