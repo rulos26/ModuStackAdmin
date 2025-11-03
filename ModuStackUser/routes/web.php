@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::match(['get', 'head'], '/', function () {
+// Route for home - accept both GET and HEAD explicitly
+Route::get('/', function () {
     return view('welcome');
 })->name('home');
