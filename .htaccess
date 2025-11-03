@@ -1,11 +1,12 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Si el request es directamente a un archivo en public/, permitirlo
-    RewriteCond %{REQUEST_URI} ^/public/
+    # Manejar requests en subdirectorio ModuStackAdmin
+    # Si el request es directamente a public/ o archivos estáticos, permitirlo
+    RewriteCond %{REQUEST_URI} ^/ModuStackAdmin/public/
     RewriteRule ^(.*)$ - [L]
     
-    # Si es un archivo existente (js, css, etc.), permitirlo
+    # Si es un archivo existente (js, css, imágenes), permitirlo
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^(.*)$ - [L]
     
@@ -13,6 +14,13 @@
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^(.*)$ - [L]
     
-    # Redirigir todo lo demás a public/
+    # Redirigir requests en /ModuStackAdmin/ a public/
+    RewriteCond %{REQUEST_URI} ^/ModuStackAdmin/
+    RewriteRule ^ModuStackAdmin/(.*)$ public/$1 [L]
+    
+    # Si está en la raíz del proyecto (sin subdirectorio), redirigir a public/
+    RewriteCond %{REQUEST_URI} !^/ModuStackAdmin/
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>

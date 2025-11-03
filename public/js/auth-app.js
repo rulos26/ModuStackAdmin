@@ -9,9 +9,53 @@ const { createRouter, createWebHistory } = VueRouter;
 
 console.log('✅ Vue y Vue Router cargados');
 
+// Detectar subdirectorio automáticamente desde la URL actual
+function getBasePath() {
+    const path = window.location.pathname;
+    const href = window.location.href;
+    
+    console.log('🔍 Detectando base path...');
+    console.log('   Pathname:', path);
+    console.log('   Href:', href);
+    
+    // Si está en un subdirectorio, extraer el path base
+    // Casos posibles:
+    // - /ModuStackAdmin/ -> /ModuStackAdmin
+    // - /ModuStackAdmin/public/index.php -> /ModuStackAdmin
+    // - /ModuStackAdmin/public/ -> /ModuStackAdmin
+    
+    if (path.includes('/ModuStackAdmin')) {
+        // Extraer /ModuStackAdmin del inicio del path
+        const match = path.match(/^(\/ModuStackAdmin)/);
+        if (match) {
+            const basePath = match[1];
+            console.log('📁 Subdirectorio detectado:', basePath);
+            return basePath;
+        }
+    }
+    
+    // Fallback: detectar desde la estructura de URL
+    // Si la URL contiene /ModuStackAdmin/, usar ese como base
+    if (href.includes('/ModuStackAdmin/')) {
+        const urlParts = new URL(href);
+        const pathParts = urlParts.pathname.split('/').filter(p => p);
+        if (pathParts[0] === 'ModuStackAdmin') {
+            const basePath = '/ModuStackAdmin';
+            console.log('📁 Subdirectorio detectado desde URL:', basePath);
+            return basePath;
+        }
+    }
+    
+    console.log('📁 Sin subdirectorio detectado, usando raíz');
+    return '';
+}
+
+const BASE_PATH = getBasePath();
+console.log('📍 Base path configurado:', BASE_PATH || '/ (raíz)');
+
 // Configurar Axios
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = '/api';
+axios.defaults.baseURL = BASE_PATH + '/api';
 console.log('✅ Axios configurado con baseURL:', axios.defaults.baseURL);
 
 // Store de Autenticación Manual (sin Pinia)
@@ -667,9 +711,10 @@ const routes = [
 console.log('🛣️ Configurando rutas:', routes.map(r => r.path).join(', '));
 
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(BASE_PATH), // Usar base path del subdirectorio
     routes,
 });
+console.log('📍 Router configurado con base path:', BASE_PATH || '/ (raíz)');
 
 router.beforeEach((to, from, next) => {
     const auth = useAuthStore();
