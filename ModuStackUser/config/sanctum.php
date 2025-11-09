@@ -2,6 +2,15 @@
 
 use Laravel\Sanctum\Sanctum;
 
+$defaultStatefulDomains = 'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1';
+
+$detectedDomains = [];
+
+if (class_exists(Sanctum::class)) {
+    $detectedDomains[] = Sanctum::currentApplicationUrlWithPort();
+    $detectedDomains[] = Sanctum::currentRequestHost();
+}
+
 return [
 
     /*
@@ -15,11 +24,10 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', implode(',', array_filter([
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        Sanctum::currentApplicationUrlWithPort(),
-        Sanctum::currentRequestHost(),
-    ])))),
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', implode(',', array_filter(array_merge(
+        [$defaultStatefulDomains],
+        $detectedDomains
+    ))))),
 
     /*
     |--------------------------------------------------------------------------
