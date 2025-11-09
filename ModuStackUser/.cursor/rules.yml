@@ -1,5 +1,29 @@
 rules:
   rules_adicionales:
+  - "REGLAS CRÍTICAS DE FRONTEND - NUNCA DEBE SER SALTADA: El frontend del proyecto siempre debe manejarse exclusivamente con la plantilla AdminLTE.
+     Toda implementación, modificación o desarrollo de interfaces de usuario debe seguir estrictamente la documentación oficial de AdminLTE disponible en su sitio web oficial.
+     Esta regla es de máxima importancia y tiene prioridad sobre cualquier otra consideración de diseño o desarrollo frontend.
+     Antes de implementar cualquier componente visual, formulario, layout o funcionalidad de interfaz, debe consultarse la documentación oficial de AdminLTE para asegurar el uso correcto de sus componentes, clases CSS y estructura HTML.
+     No se deben utilizar otros frameworks de CSS o plantillas alternativas para el frontend del proyecto."
+
+  - "IMPLEMENTACIÓN DE ADMINLTE CON CDN - OBLIGATORIO: Después de instalar la plantilla AdminLTE en el proyecto, todos los archivos CSS, JavaScript y SCSS deben ser reemplazados por enlaces CDN.
+     No se debe utilizar compilación con npm, webpack, vite o cualquier otro bundler para los assets de AdminLTE.
+     Todos los recursos de AdminLTE (CSS, JS, plugins, iconos) deben ser cargados directamente desde CDN en las vistas Blade.
+     Esta regla es obligatoria ya que el proyecto no permite compilación de assets con npm.
+     Se debe verificar la documentación oficial de AdminLTE para obtener las URLs CDN más recientes y actualizadas."
+
+  - "SEEDER DE USUARIO ROOT Y ROL SUPER USUARIO: Debe existir un seeder que cree automáticamente un rol de 'Super Usuario' (o 'Super Admin') y un usuario de prueba llamado 'root'.
+     Este seeder debe:
+       - Crear el rol 'Super Usuario' con todos los permisos disponibles o máximo nivel de acceso.
+       - Crear el usuario 'root' con credenciales de prueba (email, password) y asignarle el rol de Super Usuario.
+       - Las credenciales del usuario root deben ser documentadas y accesibles para propósitos de desarrollo y pruebas.
+       - El seeder debe poder ejecutarse de forma independiente o como parte de un proceso de inicialización del proyecto.
+     Adicionalmente, se debe crear un script shell (.sh) que automatice la ejecución de:
+       - Migraciones de base de datos (php artisan migrate)
+       - Seeders (php artisan db:seed, incluyendo el seeder del usuario root)
+       - Cualquier otro comando necesario para la inicialización del proyecto (opcional: cache:clear, config:clear, etc).
+     Este script debe estar ubicado en la raíz del proyecto y ser ejecutable para facilitar el setup inicial del entorno de desarrollo."
+
   - "Cada vez que ocurra un error en el sistema, debe documentarse en la carpeta 'log_errores/'.
      El registro debe clasificarse automáticamente según el tipo de error:
        - 'backend/' si proviene de controladores, servicios, modelos o comandos Artisan.
