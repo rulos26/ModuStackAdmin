@@ -234,3 +234,4 @@ php artisan make:controller ActivityLogController --resource
 **Estado:** ✅ Fundamento Completado - ⏳ Implementación en Progreso
 
 
+
