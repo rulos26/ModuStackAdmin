@@ -1,3 +1,4 @@
+
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -18,7 +19,7 @@
                 <span class="badge badge-warning navbar-badge">0</span>
             </a>
         </li>
-        
+
         <!-- User Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">

@@ -6,6 +6,9 @@ Resumen del estado del sistema respecto a la adopción de AdminLTE 4, autenticac
 
 ## Checklist de verificación
 
+- [x] Layout `app.blade.php` migrado a AdminLTE/CDN sin dependencia de Vite/Tailwind.
+- [x] Componentes derivados (`navigation.blade.php`, `profile/*`, componentes Blade principales) adaptados a AdminLTE.
+- [x] Layout `navigation.blade.php` actualizado para usar estilos del tema AdminLTE.
 - [x] Seeder base crea roles `Super Usuario`, `SuperAdmin`, `Admin`, `Editor`, `User` con permisos configurados (`database/seeders/RolePermissionSeeder.php`).
 - [x] Seeder principal genera usuario `root` y lo asigna al rol `Super Usuario`, además de crear `Super Admin` (`admin@example.com`) con rol `SuperAdmin` (`database/seeders/DatabaseSeeder.php`).
 - [x] Formularios de autenticación migrados a layout AdminLTE (login, registro, recuperación y verificación de correo).
@@ -30,8 +33,10 @@ Resumen del estado del sistema respecto a la adopción de AdminLTE 4, autenticac
 
 ## Pasos recomendados a seguir
 
-1. Ejecutar `./setup.sh` en entornos nuevos o después de cambios en la base de datos.
-2. Registrar y documentar resultados de pruebas automatizadas en `documentacion/logs_de_pruebas/`.
+1. Ejecutar pruebas funcionales para validar la navegación y formularios bajo el tema AdminLTE.
+2. Revisar estilos específicos en módulos (usuarios, roles, logs) para asegurar consistencia con AdminLTE.
+3. Ejecutar `./setup.sh` en entornos nuevos o después de cambios en la base de datos.
+4. Registrar y documentar resultados de pruebas automatizadas en `documentacion/logs_de_pruebas/`.
 
 ## Script de inicialización
 
