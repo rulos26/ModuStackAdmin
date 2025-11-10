@@ -54,6 +54,11 @@ rules:
       - Crearse preferiblemente con PHPUnit (para backend) o Jest/Vite (para frontend).
       - Validar el comportamiento esperado, las rutas, las respuestas y los permisos de acceso.
       - Generar un reporte con resultados y cobertura en la carpeta 'documentacion/logs_de_pruebas/'."
+  - "MIGRACIONES IDÉMPOTENTES OBLIGATORIAS: Cada archivo de migración debe validar la existencia de tablas o columnas antes de crearlas o eliminarlas.
+    - Usar `Schema::hasTable` y `Schema::hasColumn` para evitar errores 'Base table or view already exists' o 'Unknown column'.
+    - Si una tabla ya existe, la migración debe omitir su creación y continuar con las demás operaciones necesarias.
+    - Las migraciones que agregan columnas deben comprobar si la columna ya existe antes de agregarla y antes de eliminarla en el método `down()`.
+    - Cualquier nueva migración debe documentar estas validaciones en su revisión de código."
 
   # Adicionalmente (comentado por el momento):
   #   - Debe existir una base de datos de prueba independiente (configurable en '.env.testing')
