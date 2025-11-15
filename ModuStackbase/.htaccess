@@ -5,12 +5,8 @@
 
     RewriteEngine On
 
-    # RewriteBase para subdirectorio - OPCIÓN 1: Con RewriteBase
-    # Descomentar y ajustar según la ruta real del proyecto
-    # RewriteBase /ModuStackAdmin/ModuStackbase/
-
-    # OPCIÓN 2: Sin RewriteBase (si RewriteBase causa problemas)
-    # Usar esta configuración si la opción 1 no funciona
+    # RewriteBase para subdirectorio - REQUERIDO para LiteSpeed en subdirectorio
+    RewriteBase /ModuStackAdmin/ModuStackbase/
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
