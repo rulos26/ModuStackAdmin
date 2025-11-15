@@ -234,26 +234,69 @@ verify_critical_files() {
     return 0
 }
 
-# Función para verificar espacio en disco
+# Función para verificar espacio en disco (robusta para Hostinger)
 check_disk_space() {
     log_info "Verificando espacio en disco..."
-    local available_space
-    local df_output
+    local available_space=""
+    local df_output=""
+    local check_dir="$HOME"
     
-    # Optimización: usar una sola llamada a df
-    df_output=$(df -BG "$(dirname "$APP_DIR")" 2>/dev/null | tail -1)
-    available_space=$(echo "$df_output" | awk '{print $4}' | sed 's/G//')
-    
-    if [ -z "$available_space" ]; then
-        log_warn "No se pudo verificar el espacio en disco"
+    # Intentar verificar espacio en el directorio home (más confiable en Hostinger)
+    if [ -d "$HOME" ]; then
+        check_dir="$HOME"
+    elif [ -d "$(dirname "$APP_DIR")" ]; then
+        check_dir="$(dirname "$APP_DIR")"
+    else
+        log_warn "No se pudo determinar directorio para verificar espacio. Continuando..."
         return 0
     fi
     
-    if [ "$available_space" -lt 1 ]; then
+    # Intentar múltiples métodos para obtener espacio disponible
+    # Método 1: df -BG (si está disponible)
+    if command -v df >/dev/null 2>&1; then
+        df_output=$(df -BG "$check_dir" 2>/dev/null | tail -1)
+        if [ -n "$df_output" ]; then
+            available_space=$(echo "$df_output" | awk '{print $4}' | sed 's/G//' | tr -d ' ')
+        fi
+    fi
+    
+    # Método 2: df -h (fallback)
+    if [ -z "$available_space" ] && command -v df >/dev/null 2>&1; then
+        df_output=$(df -h "$check_dir" 2>/dev/null | tail -1)
+        if [ -n "$df_output" ]; then
+            # Extraer el valor y convertir a GB aproximado
+            local available_str=$(echo "$df_output" | awk '{print $4}')
+            if echo "$available_str" | grep -q "G"; then
+                available_space=$(echo "$available_str" | sed 's/G//' | tr -d ' ')
+            elif echo "$available_str" | grep -q "M"; then
+                local mb=$(echo "$available_str" | sed 's/M//' | tr -d ' ')
+                available_space=$((mb / 1024))
+            fi
+        fi
+    fi
+    
+    # Si no se pudo obtener el espacio, solo advertir pero continuar
+    if [ -z "$available_space" ] || [ "$available_space" = "" ]; then
+        log_warn "No se pudo verificar el espacio en disco exacto. Continuando..."
+        log_warn "Asegúrate de tener al menos 1GB de espacio disponible"
+        return 0
+    fi
+    
+    # Verificar que available_space sea un número válido
+    if ! echo "$available_space" | grep -qE '^[0-9]+$'; then
+        log_warn "No se pudo parsear el espacio disponible correctamente. Continuando..."
+        return 0
+    fi
+    
+    # Comparar espacio disponible (solo si es un número válido)
+    if [ "$available_space" -lt 1 ] 2>/dev/null; then
         log_error "Espacio en disco insuficiente. Disponible: ${available_space}GB (mínimo recomendado: 1GB)"
+        log_error "Libera espacio antes de continuar"
         exit 1
     fi
+    
     log_info "Espacio en disco: ${available_space}GB disponible ✓"
+    return 0
 }
 
 # Función para verificar conexión a base de datos con timeout (Hostinger)
@@ -532,8 +575,8 @@ else
   log_error "Composer no está disponible"
   log_error "En Hostinger: Descarga composer.phar y colócalo en $HOME o en el proyecto"
   log_error "Comando: curl -sS https://getcomposer.org/installer | $PHP_CMD"
-  exit 1
-fi
+    exit 1
+  fi
 
 # Instalar dependencias con timeout si está disponible
 # En Hostinger, composer puede tardar más debido a limitaciones de recursos
