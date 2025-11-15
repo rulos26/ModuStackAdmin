@@ -43,8 +43,10 @@ BRANCH="main"
 # Directorio para backups del .env (opcional)
 BACKUP_DIR="$HOME/backups"
 
-# Archivo de log para auditoría
-LOG_FILE="$HOME/deploy_$(date +%Y%m%d_%H%M%S).log"
+# Archivo de log para auditoría (en el directorio donde se ejecuta el script)
+# Usa el directorio de trabajo actual (donde se ejecuta el comando)
+LOG_DIR="${PWD:-$(pwd)}"
+LOG_FILE="$LOG_DIR/deploy_$(date +%Y%m%d_%H%M%S).log"
 
 # Variable para rastrear si el despliegue fue exitoso
 DEPLOY_SUCCESS=false
