@@ -5,9 +5,12 @@
 
     RewriteEngine On
 
-    # RewriteBase para subdirectorio (ajustar según la ruta del proyecto)
-    # Si el proyecto está en /ModuStackAdmin/ModuStackbase/, usar:
-    RewriteBase /ModuStackAdmin/ModuStackbase/
+    # RewriteBase para subdirectorio - OPCIÓN 1: Con RewriteBase
+    # Descomentar y ajustar según la ruta real del proyecto
+    # RewriteBase /ModuStackAdmin/ModuStackbase/
+
+    # OPCIÓN 2: Sin RewriteBase (si RewriteBase causa problemas)
+    # Usar esta configuración si la opción 1 no funciona
 
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
@@ -19,7 +22,9 @@
     RewriteRule ^ %1 [L,R=301]
 
     # Send Requests To Front Controller (public/index.php)...
+    # Si RewriteBase no funciona, probar sin él
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ public/index.php [L]
 </IfModule>
+
