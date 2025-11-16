@@ -74,6 +74,9 @@ while true; do
     echo "🤔 Pensando..."
     echo ""
     
+    # Escapar caracteres especiales en la pregunta para JSON
+    pregunta_escaped=$(echo "$pregunta" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed "s/'/\\'/g" | sed 's/$/\\n/' | tr -d '\n')
+    
     # Preparar el JSON para la API de OpenAI
     JSON_DATA=$(cat <<EOF
 {
@@ -81,7 +84,7 @@ while true; do
   "messages": [
     {
       "role": "user",
-      "content": "$pregunta"
+      "content": "$pregunta_escaped"
     }
   ],
   "max_tokens": 500,
