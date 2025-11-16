@@ -29,6 +29,10 @@ El script mostrará:
 ```
 Hola, ¿cómo estás?
 shh
+
+Ruta donde se está ejecutando el script:
+Directorio actual: /ruta/donde/ejecutaste/el/script
+Ruta completa del script: /ruta/completa/del/archivo/seplyer_1.1.sh
 ```
 
 ## 📝 Requisitos
@@ -50,6 +54,8 @@ Script de ejemplo para uso educativo.
 
 ### Versión 1.1 (2025-11-15)
 - Renombrado de hola.sh a seplyer_1.1.sh
+- Agregada funcionalidad para mostrar la ruta donde se ejecuta el script
+- Muestra directorio actual y ruta completa del script
 - Actualización de documentación
 
 ### Versión 1.0 (2025-11-15)
