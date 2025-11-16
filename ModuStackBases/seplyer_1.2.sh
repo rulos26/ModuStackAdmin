@@ -35,9 +35,9 @@ if [ -z "$NEWS_CONTENT" ]; then
     exit 1
 fi
 
-# Extraer el primer título y descripción del RSS
-TITLE=$(echo "$NEWS_CONTENT" | grep -oP '<title>\K[^<]+' | head -2 | tail -1 | sed 's/&quot;/"/g' | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g')
-DESCRIPTION=$(echo "$NEWS_CONTENT" | grep -oP '<description>\K[^<]+' | head -2 | tail -1 | sed 's/&quot;/"/g' | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g' | sed 's/<[^>]*>//g')
+# Extraer el primer título y descripción del RSS (compatible con diferentes sistemas)
+TITLE=$(echo "$NEWS_CONTENT" | grep -o '<title>[^<]*</title>' | head -2 | tail -1 | sed 's/<title>//g' | sed 's/<\/title>//g' | sed 's/&quot;/"/g' | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g' | sed 's/&apos;/'"'"'/g')
+DESCRIPTION=$(echo "$NEWS_CONTENT" | grep -o '<description>[^<]*</description>' | head -2 | tail -1 | sed 's/<description>//g' | sed 's/<\/description>//g' | sed 's/&quot;/"/g' | sed 's/&amp;/\&/g' | sed 's/&lt;/</g' | sed 's/&gt;/>/g' | sed 's/&apos;/'"'"'/g' | sed 's/<[^>]*>//g')
 
 if [ -n "$TITLE" ]; then
     echo "📰 Noticia de hoy:"
