@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# hola.sh
-# Versión: 1.0
+# seplyer_1.1.sh
+# Versión: 1.1
 # Script simple de saludo
 # Autor: Generado para práctica
 # Fecha: 2025-11-15
