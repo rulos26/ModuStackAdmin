@@ -1,0 +1,23 @@
+# Archivos con API keys y secretos
+ejecutar_ia.sh
+*.key
+*.secret
+.env
+.env.local
+
+# Logs
+*.log
+deploy_*.log
+
+# Backups
+*.backup
+*.backup.*
+
+# Archivos temporales
+*.tmp
+*.temp
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+

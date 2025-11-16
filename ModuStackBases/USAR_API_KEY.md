@@ -9,7 +9,7 @@ Ya tienes tu API key de OpenAI. Aquí tienes **3 formas** de usarla:
 ## Opción 1: Pasar la API key directamente al ejecutar (Más fácil) ⭐
 
 ```bash
-OPENAI_API_KEY='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' bash seplyer_1.3.sh
+OPENAI_API_KEY='tu-api-key-aqui' bash seplyer_1.3.sh
 ```
 
 **Ventaja:** No necesitas configurar nada, solo ejecutas el comando.
@@ -21,14 +21,14 @@ OPENAI_API_KEY='sk-proj-GF7n8UnuQG8JhnJ6bV-VKRdHERrvKMW7Ft_yrbhVp-iMHR3eZlk2TSL1
 ### En Linux/Mac:
 
 ```bash
-export OPENAI_API_KEY='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'
+export OPENAI_API_KEY='tu-api-key-aqui'
 bash seplyer_1.3.sh
 ```
 
 ### Para que persista (agregar a ~/.bashrc o ~/.zshrc):
 
 ```bash
-echo 'export OPENAI_API_KEY="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"' >> ~/.bashrc
+echo 'export OPENAI_API_KEY="tu-api-key-aqui"' >> ~/.bashrc
 source ~/.bashrc
 ```
 

@@ -13,9 +13,16 @@ Script bash simple que muestra un saludo y permite hacer preguntas a una IA (Ope
 
 **Opción más fácil (recomendada):**
 ```bash
+# 1. Copia el archivo de ejemplo
+cp ejecutar_ia.example.sh ejecutar_ia.sh
+
+# 2. Edita ejecutar_ia.sh y reemplaza 'TU-API-KEY-AQUI' con tu API key real
+
+# 3. Ejecuta
 bash ejecutar_ia.sh
 ```
-Este script helper ya tiene tu API key configurada.
+
+**Nota:** `ejecutar_ia.sh` está en `.gitignore` para proteger tu API key.
 
 **Otras opciones:**
 
