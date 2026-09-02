@@ -1,0 +1,64 @@
+name: modustackadmin
+
+services:
+  app:
+    build:
+      context: ./ModuStackbase
+      dockerfile: Dockerfile
+    container_name: modustackadmin_app
+    restart: unless-stopped
+    volumes:
+      - ./ModuStackbase:/var/www/html
+    environment:
+      APP_ENV: local
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: modustack_admin
+      DB_USERNAME: modustack
+      DB_PASSWORD: modustack
+    networks:
+      - modustackadmin
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: modustackadmin_nginx
+    restart: unless-stopped
+    ports:
+      - "8085:80"
+    volumes:
+      - ./ModuStackbase:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - modustackadmin
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: modustackadmin_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: modustack_admin
+      MYSQL_USER: modustack
+      MYSQL_PASSWORD: modustack
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - modustackadmin_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - modustackadmin
+
+networks:
+  modustackadmin:
+    driver: bridge
+
+volumes:
+  modustackadmin_mysql:
